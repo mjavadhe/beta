@@ -23,6 +23,21 @@ class CommentAdmin(admin.ModelAdmin):
 admin.site.register(Comment, CommentAdmin)
 
 
+"""
+class LikeAdmin(admin.ModelAdmin):
+    listDisplay = ['author', 'post']
+
+
+admin.site.register(Like, LikeAdmin)
+
+
+class DisLikeAdmin(admin.ModelAdmin):
+    listDisplay = ['author', 'post']
+
+
+admin.site.register(DisLike, DisLikeAdmin)
+"""
+
 class MessageAdmin(admin.ModelAdmin):
     listDisplay = ['sender', 'recipient', 'content', 'timestamp']
 

@@ -53,6 +53,30 @@ def createComment(request, postId):
 
 
 """@login_required(login_url='/login_register/')
+def createLike(request, postId):
+    post = Post.objects.get(pk=postId)
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        if text:
+            Comment.objects.create(author=request.user, post=post, text=text)
+            return HttpResponseRedirect(reverse('post_detail', args=[postId]))
+    return render(request, 'createcomment.html', {'post': post})
+
+
+@login_required(login_url='/login_register/')
+def createDisike(request, postId):
+    post = Post.objects.get(pk=postId)
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        if text:
+            Comment.objects.create(author=request.user, post=post, text=text)
+            return HttpResponseRedirect(reverse('post_detail', args=[postId]))
+    return render(request, 'createcomment.html', {'post': post})
+"""
+
+
+
+"""@login_required(login_url='/login_register/')
 def createPost(request):
     user = CustomUser.objects.all()
     if request.method == 'POST':

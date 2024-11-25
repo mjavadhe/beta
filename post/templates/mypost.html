@@ -2,203 +2,526 @@
 <html lang="en">
 <head>
     {% extends 'base.html' %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    {% block content %}
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366F1, #4F46E5);
+            --secondary-gradient: linear-gradient(135deg, #3B82F6, #2563EB);
+            --accent-gradient: linear-gradient(135deg, #10B981, #059669);
+            --danger-gradient: linear-gradient(135deg, #EF4444, #DC2626);
+            --warning-gradient: linear-gradient(135deg, #F59E0B, #D97706);
+            --bg-dark: #0F172A;
+            --card-bg: #1E293B;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+        }
+
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+            transform-origin: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.03) 0%, 
+                rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+        }
+
+        .post-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                       0 0 40px rgba(255, 255, 255, 0.15);
+        }
+
+        .post-header {
+            padding: 1.75rem;
+            background: linear-gradient(to right, 
+                rgba(99, 102, 241, 0.1), 
+                rgba(79, 70, 229, 0.05));
+            border-bottom: 1px solid rgba(109, 93, 93, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .author-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .post-timestamp {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .post-content {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .media-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-media {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .media-wrapper:hover .post-media {
+            transform: scale(1.08);
+        }
+
+        .media-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, 
+                rgba(15, 23, 42, 0.5) 0%, 
+                transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .media-wrapper:hover .media-overlay {
+            opacity: 1;
+        }
+
+        .action-buttons {
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .dropdown-menu {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-item {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .post-card {
+                margin: 1rem;
+            }
+
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+
+            .btn-modern {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366F1, #4F46E5);
+            --secondary-gradient: linear-gradient(135deg, #3B82F6, #2563EB);
+            --accent-gradient: linear-gradient(135deg, #10B981, #059669);
+            --danger-gradient: linear-gradient(135deg, #EF4444, #DC2626);
+            --warning-gradient: linear-gradient(135deg, #F59E0B, #D97706);
+            --bg-dark: #0F172A;
+            --card-bg: #1E293B;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+        }
+
+
+
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+            transform-origin: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.03) 0%, 
+                rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+        }
+
+        .post-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                       0 0 40px rgba(99, 102, 241, 0.15);
+        }
+
+        .post-header {
+            padding: 1.75rem;
+            background: linear-gradient(to right, 
+                rgba(99, 102, 241, 0.1), 
+                rgba(79, 70, 229, 0.05));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .author-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .post-timestamp {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .post-content {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .media-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-media {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .media-wrapper:hover .post-media {
+            transform: scale(1.08);
+        }
+
+        .media-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, 
+                rgba(15, 23, 42, 0.5) 0%, 
+                transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .media-wrapper:hover .media-overlay {
+            opacity: 1;
+        }
+
+        .action-buttons {
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-modern {
+            padding: 0.875rem 1.75rem;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.625rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .btn-modern::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-modern:hover::after {
+            transform: translateX(100%);
+        }
+
+        .btn-modern i {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-modern:hover i {
+            transform: scale(1.2);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-warning {
+            background: var(--warning-gradient);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger-gradient);
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(var(--shadow-color), 0.4);
+        }
+
+        .caption-section {
+            padding: 2rem;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right,
+                transparent,
+                rgba(99, 102, 241, 0.5),
+                transparent);
+            margin: 1.5rem 0;
+        }
+
+        .caption-content {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .comments-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 0.875rem 2rem;
+            background: var(--accent-gradient);
+            border-radius: 14px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .comments-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .post-card {
+                margin: 1rem;
+            }
+            
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+
+            .btn-modern {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.05) 25%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.05) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: -200% 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    {% block content %}
-        <div class="container">
-            <div class="row">
-                {% for post in posts %}
-                    <div class="col-md-3">
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <p type="text" id="title" name="title" maxlength="50" required>
-                                <h2><a href="/users/{{ post.author.pk }}/">{{ post.author.username }}</a></h2>
-                            </p>
+    <div class="container py-4">
+        <div class="row g-4">
+            {% for post in posts %}
+            <div class="col-md-6 col-lg-4">
+                <article class="post-card">
+                    <header class="post-header">
+                        <div class="author-avatar">
+                            {{ post.author.username|slice:":1" }}
+                        </div>
+                        <div>
+                            <h2 class="author-name">
+                                <a href="/users/{{ post.author.pk }}/">{{ post.author.username }}</a>
+                            </h2>
+                            <span class="post-timestamp">Posted {% if post.created_at %}{{ post.created_at|timesince }}{% else %}recently{% endif %} ago</span>
+                        </div>
+                        <!-- Menu Dropdown for Edit and Delete -->
+                        <div class="dropdown ms-auto">
+                            <button class="btn btn-link text-white" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="{% url 'editpost' post.id %}"><i class="fas fa-edit"></i> Edit Post</a></li>
+                                <li><a class="dropdown-item" href="{% url 'deletepost' post.id %}"><i class="fas fa-trash-alt"></i> Delete Post</a></li>
+                            </ul>
+                        </div>
+                    </header>
+                    
+                    <div class="post-content">
+                        <div class="media-wrapper">
                             {% if post.video %}
-                                <a href="/posts/{{ post.id }}/"><video src="{{ post.video.url }}" controls alt="{{ post.title }}"  style="max-width: 100%; height: auto;"></video></a>
+                            <a href="/posts/{{ post.id }}/">
+                                <video class="post-media" src="{{ post.video.url }}" controls alt="{{ post.title }}"></video>
+                            </a>
                             {% elif post.image %}
-                                <center><a href="/posts/{{ post.id }}/"><img class="Image" name="Image" src="{{ post.image.url }}" alt="Post Image" style="max-width: 100%; height: auto;"></a><br></center><br>
+                            <a href="/posts/{{ post.id }}/">
+                                <img class="post-media" src="{{ post.image.url }}" alt="Post Image">
+                            </a>
                             {% endif %}
-                            <div align=center class="input-group mb-3">
-                                <button type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
-                                    caption & comments                  
-                                </button>
-                                <a href="{% url 'editpost' post.id %}"><button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
-                                    edit               
-                                </a></button> &nbsp;&nbsp;
-                                <a href="{% url 'deletepost' post.id %}"><button class="btn btn-danger" type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
-                                    delete                
-                                </a></button>
-                                <div class="collapse" id="collapseExample{{ forloop.counter }}">
-                                    <div class="card card-body">
-                                        <h2>Caption</h2>
-                                        -------------------------
-                                        <center>{{ post.text }}</center>
-                                        <a href="/posts/{{ post.id }}/"><button type="button" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
-                                            comments                  
-                                        </a></button>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        <br>
+                            <div class="media-overlay"></div>
+                        </div>
                     </div>
-                    {% if forloop.counter|divisibleby:4 %}
-                        </div><div class="row">
-                    {% endif %}
-                {% endfor %}
+
+                    <div class="action-buttons">
+                        <button class="btn-modern btn-primary" type="button" data-bs-toggle="collapse" 
+                                data-bs-target="#collapse{{ forloop.counter }}">
+                            <i class="fas fa-comment-alt"></i>
+                            View Content
+                        </button>
+                    </div>
+
+                    <div class="collapse" id="collapse{{ forloop.counter }}">
+                        <div class="caption-section">
+                            <h3 class="section-title">Post Content</h3>
+                            <div class="divider"></div>
+                            <div class="caption-content">
+                                {{ post.text }}
+                            </div>
+                            <div class="text-center">
+                                <a href="/posts/{{ post.id }}/" class="comments-btn">
+                                    <i class="fas fa-comments"></i>
+                                    View Comments
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
             </div>
+            {% endfor %}
         </div>
-        <br>
+    </div>
 
-    
-<style>
-    .image{
-        padding: 1000px 100px;
-        margin: 1000px 100px;
-        border-radius: 5px;
-
-    }
-
-
-    .input-group {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 1rem;
-    }
-    
-    button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 16px;
-    }
-    
-    button:hover {
-        background-color: #0056b3;
-    }
-    
-    .collapse {
-        margin-top: 10px;
-    }
-    
-    .card {
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .card-body {
-        padding: 20px;
-    }
-    
-    h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-    
-    .center {
-        text-align: center;
-    }
-
-
-
-
-
-html, body {
-    height: 100%;
-    width: 100%;
-    place-items: center;
-    background: -webkit-linear-gradient(left, #9896F0, #FBC8D5);
-}
-
-form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    margin: auto;
-}
-
-form label {
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-form input[type="text"],
-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-form button {
-    background: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-form button:hover {
-    background: #45a049;
-}
-
-h1, h2, h3 {
-    text-align: center;
-}
-
-button a {
-    color: white;
-    text-decoration: none;
-}
-
-/* Media Queries for Responsive Design */
-@media (max-width: 768px) {
-    form {
-        max-width: 90%;
-        padding: 15px;
-    }
-
-    form input[type="text"],
-    form textarea {
-        padding: 8px;
-    }
-
-    form button {
-        padding: 8px 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    form {
-        max-width: 100%;
-        padding: 10px;
-    }
-
-    form input[type="text"],
-    form textarea {
-        padding: 5px;
-    }
-
-    form button {
-        padding: 5px 10px;
-    }
-}
-</style>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% endblock %}
 </body>
 </html>
